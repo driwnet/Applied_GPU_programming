@@ -4,14 +4,15 @@
 #include <sys/time.h>
 
 #define NUM_PARTICLES 10000
-#define error 0.05
+#define error 1e-6
 
 
-__host__ __device__ void uptdateParticle(particle *particle, seed seeds, int iter, int id){
+
+__host__ __device__ void uptdateParticle(particle *particle, int iter, int id){
     //update the velocity:
-    particle.velocity[0] = (seeds.x * id + iter) % NUM_PARTICLES;
-    particle.velocity[1] = (seeds.y * id + iter) % NUM_PARTICLES;
-    particle.velocity[2] = (seeds.z * id + iter) % NUM_PARTICLES;
+    particle.velocity[0] = (3*id + iter) % NUM_PARTICLES;
+    particle.velocity[1] = (4*id + iter) % NUM_PARTICLES;
+    particle.velocity[2] = (5*id + iter) % NUM_PARTICLES;
 
     //update the position:
     particle.position[0] = particle.position[0] + particles.velocity[0]; 
@@ -19,12 +20,19 @@ __host__ __device__ void uptdateParticle(particle *particle, seed seeds, int ite
     particle.position[2] = particle.position[2] + particles.velocity[2]; 
 }
 
-__global__ void timeStep(particle *particles, seed seeds, int iter){
+__global__ void timeStep(particle *particles, int iter){
     const int id = threadIdx.x + blockIdx.x*blockDim.d_x;
     if(id < NUM_PARTICLES){
-        uptdateParticle(&particles[i], seeds, iter, id);
+        uptdateParticle(&particles[i], iter, id);
     }
 }
+
+double cpuSecond() {
+    struct timeval tp;
+    gettimeofday(&tp,NULL);
+    return ((double)tp.tv_sec + (double)tp.tv_usec*1.e-6);
+}
+
 
 
 struct particle {
@@ -32,63 +40,55 @@ struct particle {
     float velocity[3];
 };
 
-struct seed {
-    int x;
-    int y;
-    int z;
-};
 
 int main( int argc, char *argv[]){
 
     bool bien = true;
     const int iterations = argv[1];
     const int TPB = argv[2];
+    const int NUM_PARTICLES = argv[3]
     const int GRID = (NUM_PARTICLES + TPB - 1)/TPB;
 
-    struct timeval time_CPU;
-    struct timeval time_GPU;
 
-    float start_GPU, stop_GPU;
-    float start_CPU, stop_CPU;
-    float diferencia_CPU, diferencia_GPU;
+    double start_GPU, stop_GPU;
+    double start_CPU, stop_CPU;
+    double diferencia_CPU, diferencia_GPU;
 
 
-    struct seed seeds = {3,4,5};
+    struct particle *particlesCPU = new particle[NUM_PARTICLES];
+    struct particle *particlesGPU= new particle[NUM_PARTICLES];
+    struct particle *resGPU = new particle[NUM_PARTICLES];
 
-    struct particle *particlesCPU[NUM_PARTICLES];
-    struct particle *particlesGPU[NUM_PARTICLES];
-    struct particle *resGPU[NUM_PARTICLES];
 
     // CPU part//
-    gettimeofday(&timeCPU, NULL);
-    start_CPU = time_CPU.tv_sec * 1000000 + time_CPU.tv_usec;
+
+    start_CPU = cpuSecond();
 
     for(int i = 0; i < iterations; i++){
         for(int j = 0; i < NUM_PARTICLES; j++){
-            uptdateParticle(&particlesCPU[j], seeds, i, j);
+            uptdateParticle(&particlesCPU[j], i, j);
         }
     }
 
-    gettimeofday(&time_CPU, NULL);
-    stop_CPU = time_CPU.tv_sec * 1000000 + time_CPU.tv_usec;
+
+    stop_CPU = cpuSecond();
     diferencia_CPU = stop_CPU - start_CPU;
 
     // Finish CPU part
 
     //Start GPU part
-    gettimeofday(&time_GPU, NULL);
-    start_GPU = time_GPU.tv_sec * 1000000 + time_GPU.tv_usec;
+
+    start_GPU = cpuSecond();
     cudaMalloc(&particlesGPU, NUM_PARTICLES * sizeof(particle))
 
     for(int i = 0; i < iterations; i++){
-        timeStep<<<GRID, TPB>>>(&particlesGPU, seeds, i);
+        timeStep<<<GRID, TPB>>>(&particlesGPU, i);
     }
 
     cudaDeviceSynchtonize();
     cudaMemcpy(resGPU, particlesGPU, NUM_PARTICLES * sizeof(particle), cudaMemcpyDeviceToHost);
 
-    gettimeofday(&time_GPU, NULL);
-    stop_GPU = time_GPU.tv_sec * 1000000 + time_GPU.tv_usec;
+    stop_GPU = cpuSecond();
 
     diferencia_GPU = stop_GPU - start_GPU;
 
