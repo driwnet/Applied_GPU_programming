@@ -55,9 +55,9 @@ int main( int argc, char *argv[]){
     double diferencia_CPU, diferencia_GPU;
 
 
-    struct particle *particlesCPU = new particle[NUM_PARTICLES];
-    struct particle *particlesGPU= new particle[NUM_PARTICLES];
-    struct particle *resGPU = new particle[NUM_PARTICLES];
+    struct particle *particlesCPU[NUM_PARTICLES];
+    struct particle *particlesGPU[NUM_PARTICLES];
+    struct particle *resGPU[NUM_PARTICLES];
 
 
     // CPU part//
@@ -66,7 +66,7 @@ int main( int argc, char *argv[]){
 
     for(int i = 0; i < iterations; i++){
         for(int j = 0; i < NUM_PARTICLES; j++){
-            uptdateParticle(&particlesCPU[j], i, j);
+            uptdateParticle(particlesCPU[j], i, j);
         }
     }
 
