@@ -2,15 +2,15 @@
 #include <stdlib.h>
 #define TPB 256
 #define N 10000
-#define GRID (ARRAY_SICE + TPB - 1)/TPB
+#define GRID (N + TPB - 1)/TPB
 #define error 0.05
 
 
 __global__ void saxpy(float *x, float *y, const float a){
 
-    const int id = threadIdx.x + blockIdx.x*blockDim.d_x
+    const int id = threadIdx.x + blockIdx.x*blockDim.d_x;
     if (id < N){
-        y[id] = a*x[id] + y[id]
+        y[id] = a*x[id] + y[id];
     }
 }
 
@@ -31,18 +31,18 @@ int main(){
         y[i] = rand() % 1000;
     }
 
-    cudaMemcpy(d_x, x, N * sizeof(float), cudaMemcpyHostToDevice)
-    cudaMemcpy(d_y, y, N * sizeof(float), cudaMemcpyHostToDevice)
+    cudaMemcpy(d_x, x, N * sizeof(float), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_y, y, N * sizeof(float), cudaMemcpyHostToDevice);
 
     for(int i = 0;i<N,i++){
-        res[i] = a*x[i] + y[i]
+        res[i] = a*x[i] + y[i];
     }
-    printf("Computing SAXPY on the CPU.. Done!\n")
-    saxpy<<<GRID, TPB>>>(d_x, d_y, a)
+    printf("Computing SAXPY on the CPU.. Done!\n");
+    saxpy<<<GRID, TPB>>>(d_x, d_y, a);
     cudaDeviceSynchtonize();
     
-    cudaMemcpy(d_y, y, N * sizeof(float), cudaMemcpyDeviceToHost)
-    printf("Computing SAXPY on the GPU.. Done!\n")
+    cudaMemcpy(d_y, y, N * sizeof(float), cudaMemcpyDeviceToHost);
+    printf("Computing SAXPY on the GPU.. Done!\n");
 
     for( int i = 0; i < N && comp, i++){
         if (res[i] < y[i] - error || res[i] > y[i] + error ){
@@ -52,7 +52,7 @@ int main(){
     if(comp){
         printf("Comparing the putput for each implementation.. Correct!");
     }else {
-        printf("Comparing the putput for each implementation.. Incorrect!")
+        printf("Comparing the putput for each implementation.. Incorrect!");
     }
     free(x);
     free(y);
