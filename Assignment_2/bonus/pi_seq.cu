@@ -21,12 +21,12 @@ double cpuSecond() {
     return ((double)tp.tv_sec + (double)tp.tv_usec*1.e-6);
 }
 
-__global__ void count(int *d_res, curandState *states, int iterations){
+__global__ void count(int *d_res, curandState *states, int iterations, int num_i){
     const int idx = threadIdx.x + blockDim.x * blockIdx.x;
     double x, y, z;
     int count;
 
-    if (idx >= NUM_ITER) return;
+    if (idx >= num_i) return;
 
     int seed = idx; // different seed per thread
     curand_init(seed, idx, 0, &states[idx])
@@ -53,6 +53,7 @@ __global__ void count(int *d_res, curandState *states, int iterations){
 
 int main(int argc, char* argv[])
 {
+    int count;
     TPB = argv[1];
     NUM_ITER = argv[2];
     GRID = (NUM_ITER + TPB - 1) / TPB;
@@ -70,17 +71,24 @@ int main(int argc, char* argv[])
     
     // Calculate PI following a Monte Carlo method
     start_time = cpuSecond();
-    count<<<GRID, TPB>>>(d_res, dev_random, NUM_ITER_CUDA);
+
+    count<<<GRID, TPB>>>(d_res, dev_random, NUM_ITER_CUDA, NUM_ITER);
+    
     cudaDeviceSynchtonize();
+
+    cudaMemcpy(count, d_res, ARRAY_SIZE * sizeof(float), cudaMemcpyDeviceToHost);
+
     stop_time = cpuSecond();
+
     diference = stop_time - start_time;
 
     
     // Estimate Pi and display the result
-    pi = ((double)d_res / (double)NUM_ITER) * 4.0;
+    pi = ((double)count / (double)NUM_ITER) * 4.0;
     
     printf("The result is %f\n", pi);
     printf("The execution time is %f\n", diference);
     
     return 0;
 }
+
