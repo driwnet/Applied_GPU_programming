@@ -5,29 +5,14 @@
 
 #define error 1e-6
 
-int NUM_ITERATIONS;
-int BLOCK_SIZE;
-int NUM_PARTICLES;
+#define NUM_ITERATIONS 1000
+#define BLOCK_SIZE 16
+#define NUM_PARTICLES 10000
 
-
-__host__ __device__ void uptdateParticle(particle *particula, int iter, int id, int num_p){
-    //update the velocity:
-    particula.velocity[0] = (3*id + iter) % num_p;
-    particula.velocity[1] = (4*id + iter) % num_p;
-    particula.velocity[2] = (5*id + iter) % num_p;
-
-    //update the position:
-    particula.position[0] = particula.position[0] + particula.velocity[0]; 
-    particula.position[1] = particula.position[1] + particula.velocity[1]; 
-    particula.position[2] = particula.position[2] + particula.velocity[2]; 
-}
-
-__global__ void timeStep(particle *particles, int iter, int num_p){
-    const int id = threadIdx.x + blockIdx.x*blockDim.d_x;
-    if(id < num_p){
-        uptdateParticle(particles[id], iter, id, num_p);
-    }
-}
+struct particle {
+    float position[3];
+    float velocity[3];
+};
 
 double cpuSecond() {
     struct timeval tp;
@@ -35,21 +20,31 @@ double cpuSecond() {
     return ((double)tp.tv_sec + (double)tp.tv_usec*1.e-6);
 }
 
+__host__ __device__ void uptdateParticle(particle *particula, int iter, int id, int num_p){
+    //update the velocity:
+    particula[id].velocity[0] = (3*id + iter) % num_p;
+    particula[id].velocity[1] = (4*id + iter) % num_p;
+    particula[id].velocity[2] = (5*id + iter) % num_p;
 
+    //update the position:
+    particula[id].position[0] = particula[id].position[0] + particula[id].velocity[0]; 
+    particula[id].position[1] = particula[id].position[1] + particula[id].velocity[1]; 
+    particula[id].position[2] = particula[id].position[2] + particula[id].velocity[2]; 
+}
 
-struct particle {
-    float position[3];
-    float velocity[3];
-};
+__global__ void timeStep(particle *particles, int iter, int num_p){
+    const int id = threadIdx.x + blockIdx.x*blockDim.x;
+    if(id < num_p){
+        uptdateParticle(particles, iter, id, num_p);
+    }
+}
+
 
 
 int main( int argc, char *argv[]){
 
     bool bien = true;
-    NUM_ITERATIONS = argv[1];
-    BLOCK_SIZE = argv[2];
-    NUM_PARTICLES = argv[3];
-    const int GRID = (NUM_PARTICLES + TPB - 1)/TPB;
+    int GRID = (NUM_PARTICLES + BLOCK_SIZE - 1)/BLOCK_SIZE;
 
 
     double start_GPU, stop_GPU;
@@ -57,10 +52,12 @@ int main( int argc, char *argv[]){
     double diferencia_CPU, diferencia_GPU;
 
 
-    particle *particlesCPU = (particle*)malloc(NUM_PARTICLES * sizeof(particle));
-    particle *particlesGPU;
-    particle *resCPU = (particle*)malloc(NUM_PARTICLES * sizeof(particle));
-
+    //particle *particlesCPU = (particle*)malloc(NUM_PARTICLES * sizeof(particle));
+    //particle *particlesGPU;
+    //particle *resCPU = (particle*)malloc(NUM_PARTICLES * sizeof(particle));
+    particle *particlesCPU = new particle[NUM_PARTICLES];
+    particle *resCPU = new particle[NUM_PARTICLES];
+    particle *particlesGPU = new particle[NUM_PARTICLES];
 
     // CPU part//
 
@@ -68,7 +65,7 @@ int main( int argc, char *argv[]){
 
     for(int i = 0; i < NUM_ITERATIONS; i++){
         for(int j = 0; j < NUM_PARTICLES; j++){
-            uptdateParticle(particlesCPU[j], i, j, NUM_PARTICLES);
+            uptdateParticle(particlesCPU, i, j, NUM_PARTICLES);
         }
     }
 
@@ -81,13 +78,13 @@ int main( int argc, char *argv[]){
     //Start GPU part
 
     start_GPU = cpuSecond();
-    cudaMalloc(&particlesGPU, NUM_PARTICLES * sizeof(particle))
+    cudaMalloc(&particlesGPU, NUM_PARTICLES * sizeof(particle));
 
     for(int i = 0; i < NUM_ITERATIONS; i++){
-        timeStep<<<GRID, BLOCK_SIZE>>>(&particlesGPU, i, NUM_PARTICLES);
+        timeStep<<<GRID, BLOCK_SIZE>>>(particlesGPU, i, NUM_PARTICLES);
     }
 
-    cudaDeviceSynchtonize();
+    cudaDeviceSynchronize();
     cudaMemcpy(resCPU, particlesGPU, NUM_PARTICLES * sizeof(particle), cudaMemcpyDeviceToHost);
 
     stop_GPU = cpuSecond();
@@ -96,12 +93,15 @@ int main( int argc, char *argv[]){
 
     for(int i = 0; i < NUM_PARTICLES && bien; i++){
         for(int dim = 0; dim < 3 && bien; dim++){
-            if(abs(particlesCPU[i].position[dim] - resGPU[i].position[dim]) > error ){
+            if(abs(particlesCPU[i].position[dim] - resCPU[i].position[dim]) > error ){
                 bien = false;
             }
         }
     }
 
+    printf("NUM_ITERATIONS: %d\n", NUM_ITERATIONS);
+    printf("NUM_PARTICLES: %d\n", NUM_PARTICLES);
+    printf("BLOCK_SIZE: %d\n", BLOCK_SIZE);
     if(bien){
         printf("datos correctos\n");
     }else{
@@ -109,7 +109,7 @@ int main( int argc, char *argv[]){
     }
     
     cudaFree(particlesGPU);
-    delete[] resGPU;
+    delete[] resCPU;
     delete[] particlesCPU;
 
     printf("Duration of the CPU: %f\n", diferencia_CPU);
