@@ -22,7 +22,7 @@ double cpuSecond() {
 }
 
 
-__global__ void count_nom(int *d_res, curandState *states){}
+__global__ void count_nom(int *d_res, curandState *states){
     const int idx = threadIdx.x + blockIdx.x*blockDim.x;
     double x,y,z;
     const int a = 1;
