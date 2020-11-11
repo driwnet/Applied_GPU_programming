@@ -6,9 +6,9 @@ __global__ void hello(){
     printf("Hello World! My threadId is %d\n",Id);
 }
 
-void main(){
+int main(){
     int Block = 1;
     hello<<<Block, TPB>>>();
-    cudaDeviceSynchtonize();
+    cudaDeviceSynchronize();
     return 0;
 }
