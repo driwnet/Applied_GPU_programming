@@ -164,6 +164,14 @@ ASSIGNMENT_2:
   Iterations per thread: 100000
   The execution time is 1.095115
   
+  ---------------------------------------------------------------------------------------------------
+
+  Change the doubles per float, double presicion to single presicion
+
+  The result is 3.141672
+  Block size: 256
+  Iterations per thread: 10000
+  The execution time is 0.015823
 
 
   
