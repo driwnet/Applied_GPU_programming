@@ -20,69 +20,14 @@ double cpuSecond() {
     gettimeofday(&tp,NULL);
     return ((double)tp.tv_sec + (double)tp.tv_usec*1.e-6);
 }
-if (idx >= NUM_THREADS) return;
-
-int seed = idx; // different seed per thread
-curand_init(seed, idx, 0, &states[idx]);
 
 
-for (int iter = 0; iter < NUM_ITER_THREADS; iter++) {
-    x = curand_uniform (&states[idx]);
-    y = curand_uniform (&states[idx]);
-    z = sqrt((x*x) + (y*y));
+__global__ void count_nom(int *d_res, curandState *states){}
+    const int idx = threadIdx.x + blockIdx.x*blockDim.x;
+    double x,y,z;
+    const int a = 1;
 
-    if (z <= 1.0)
-    {
-        atomicAdd(d_res, a);
-    }
-}
-
-
-
-
-}
-
-
-
-int main(int argc, char* argv[])
-{
-
-int grid = (NUM_THREADS + TPB - 1) / TPB;
-double start_time, stop_time, diference;
-double pi;
-
-int *d_res;
-int *count = (int*)malloc(sizeof(int));
-cudaMalloc(&d_res, sizeof(int));
-
-srand(SEED); // Important: Multiply SEED by "rank" when you introduce MPI!
-
-curandState *dev_random;
-cudaMalloc((void**)&dev_random, grid*TPB*sizeof(curandState));
-
-
-// Calculate PI following a Monte Carlo method
-start_time = cpuSecond();
-
-count_nom<<<grid, TPB>>>(d_res, dev_random);
-
-cudaDeviceSynchronize();
-
-cudaMemcpy(count, d_res,sizeof(int), cudaMemcpyDeviceToHost);
-
-stop_time = cpuSecond();
-
-diference = stop_time - start_time;
-
-
-// Estimate Pi and display the result
-pi = ((double)count[0] / (double)(NUM_ITER_THREADS * NUM_THREADS)) * 4.0;
-
-printf("The result is %f\n", pi);
-printf("The execution time is %f\n", diference);
-
-return 0;
-} if (idx >= NUM_THREADS) return;
+    if (idx >= NUM_THREADS) return;
 
     int seed = idx; // different seed per thread
     curand_init(seed, idx, 0, &states[idx]);
@@ -98,9 +43,6 @@ return 0;
             atomicAdd(d_res, a);
         }
     }
-    
-
-    
 
 }
 
@@ -109,43 +51,9 @@ return 0;
 int main(int argc, char* argv[])
 {
     double pi;
-
-    int *d_res;
-    int *count = (int*)malloc(sizeof(int));
-    cudaMalloc(&d_res, sizeof(int));
-
-    srand(SEED); // Important: Multiply SEED by "rank" when you introduce MPI!
-    
-    curandState *dev_random;
-    cudaMalloc((void**)&dev_random, grid*TPB*sizeof(curandState));
-
-    
-    // Calculate PI following a Monte Carlo method
-    start_time = cpuSecond();
-
-    count_nom<<<grid, TPB>>>(d_res, dev_random);
-    
-    cudaDeviceSynchronize();
-
-    cudaMemcpy(count, d_res,sizeof(int), cudaMemcpyDeviceToHost);
-
-    stop_time = cpuSecond();
-
-    diference = stop_time - start_time;
-
-    
-    // Estimate Pi and display the result
-    pi = ((double)count[0] / (double)(NUM_ITER_THREADS * NUM_THREADS)) * 4.0;
-    
-    printf("The result is %f\n", pi);
-    printf("The execution time is %f\n", diference);
-    
-    return 0;
-}
-    int grid = (NUM_THREADS + TPB - 1) / TPB;
     double start_time, stop_time, diference;
-    double pi;
-
+    int grid = (NUM_THREADS + TPB - 1)/ TPB;
+    
     int *d_res;
     int *count = (int*)malloc(sizeof(int));
     cudaMalloc(&d_res, sizeof(int));
@@ -178,4 +86,5 @@ int main(int argc, char* argv[])
     
     return 0;
 }
+
 
