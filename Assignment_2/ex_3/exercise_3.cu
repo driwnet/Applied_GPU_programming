@@ -52,12 +52,9 @@ int main( int argc, char *argv[]){
     double diferencia_CPU, diferencia_GPU;
 
 
-    //particle *particlesCPU = (particle*)malloc(NUM_PARTICLES * sizeof(particle));
-    //particle *particlesGPU;
-    //particle *resCPU = (particle*)malloc(NUM_PARTICLES * sizeof(particle));
-    particle *particlesCPU = new particle[NUM_PARTICLES];
-    particle *resCPU = new particle[NUM_PARTICLES];
-    particle *particlesGPU = new particle[NUM_PARTICLES];
+    particle *particlesCPU = (particle*)malloc(NUM_PARTICLES * sizeof(particle));
+    particle *particlesGPU;
+    particle *resCPU = (particle*)malloc(NUM_PARTICLES * sizeof(particle));
 
     // CPU part//
 
