@@ -1,0 +1,155 @@
+ASSIGNMENT_2:
+
+ EXERCISE_3:
+  
+  NUM_ITERATIONS: 10
+  datos correctos 
+  Duration of the CPU: 0.003297
+  Duration of the GPU: 0.055658
+
+  NUM_ITERATIONS: 100
+  datos correctos
+  Duration of the CPU: 0.021668
+  Duration of the GPU: 0.053922
+  
+  NUM_ITERATIONS: 1000
+  datos correctos
+  Duration of the CPU: 0.174027
+  Duration of the GPU: 0.072592
+  
+  NUM_ITERATIONS: 10000
+  datos correctos
+  Duration of the CPU: 1.704749
+  Duration of the GPU: 0.345229
+
+---------------------------------------------------------------------------------------------------
+ 
+  Vario ahora el numero de particulas
+
+  NUM_ITERATIONS: 1000
+  NUM_PARTICLES: 100
+  datos correctos
+  Duration of the CPU: 0.003386
+  Duration of the GPU: 0.067426
+
+  NUM_ITERATIONS: 1000
+  NUM_PARTICLES: 1000
+  datos correctos
+  Duration of the CPU: 0.023561
+  Duration of the GPU: 0.053239
+
+  NUM_ITERATIONS: 1000
+  NUM_PARTICLES: 10000
+  datos correctos
+  Duration of the CPU: 0.172349
+  Duration of the GPU: 0.079053
+
+  NUM_ITERATIONS: 1000
+  NUM_PARTICLES: 100000
+  datos correctos
+  Duration of the CPU: 1.792640
+  Duration of the GPU: 0.326745
+
+---------------------------------------------------------------------------------------------------
+
+  Vario ahora el numero de hilo por bloque:
+
+  NUM_ITERATIONS: 1000
+  NUM_PARTICLES: 10000
+  BLOCK_SIZE: 16
+  datos correctos
+  Duration of the CPU: 0.180517
+  Duration of the GPU: 0.070800
+
+  NUM_ITERATIONS: 1000
+  NUM_PARTICLES: 10000
+  BLOCK_SIZE: 32
+  datos correctos
+  Duration of the CPU: 0.203868
+  Duration of the GPU: 0.073461
+
+  NUM_ITERATIONS: 1000
+  NUM_PARTICLES: 10000
+  BLOCK_SIZE: 64
+  datos correctos
+  Duration of the CPU: 0.180742
+  Duration of the GPU: 0.079949
+
+  NUM_ITERATIONS: 1000
+  NUM_PARTICLES: 10000
+  BLOCK_SIZE: 128
+  datos correctos
+  Duration of the CPU: 0.183561
+  Duration of the GPU: 0.089990
+          
+  NUM_ITERATIONS: 1000
+  NUM_PARTICLES: 10000
+  BLOCK_SIZE: 256
+  datos correctos
+  Duration of the CPU: 0.205457
+  Duration of the GPU: 0.082507
+
+---------------------------------------------------------------------------------------------------
+
+ BONUS: 1000 iter per thread
+
+  The result is 3.142254
+  THREADS PER BLOCK: 16
+  The execution time is 0.024055
+
+  The result is 3.142254
+  THREADS PER BLOCK: 32
+  The execution time is 0.023237
+
+  The result is 3.142254
+  THREADS PER BLOCK: 64
+  The execution time is 0.022064
+
+  The result is 3.142254
+  THREADS PER BLOCK: 128
+  The execution time is 0.021737
+
+  
+  The result is 3.142254
+  THREADS PER BLOCK: 256
+  The execution time is 0.022984
+
+---------------------------------------------------------------------------------------------------
+
+  The result is 3.141495
+  THREADS PER BLOCK: 16
+  NUM_ITER_THREADS: 100000
+  The execution time is 2.134947
+
+  The result is 3.141495
+  THREADS PER BLOCK: 32
+  NUM_ITER_THREADS: 100000
+  The execution time is 1.887504
+
+  The result is 3.141495
+  THREADS PER BLOCK: 64
+  NUM_ITER_THREADS: 100000
+  The execution time is 1.889987
+  
+  The result is 3.141495
+  THREADS PER BLOCK: 128
+  NUM_ITER_THREADS: 100000
+  The execution time is 1.881613
+
+  The result is 3.141495
+  THREADS PER BLOCK: 256 
+  NUM_ITER_THREADS: 100000
+  The execution time is 1.890538
+
+---------------------------------------------------------------------------------------------------
+
+  Using float and not double
+
+  The result is 3.141495
+  THREADS PER BLOCK: 256
+  NUM_ITER_THREADS: 100000
+  The execution time is 1.885962
+
+
+  
+
