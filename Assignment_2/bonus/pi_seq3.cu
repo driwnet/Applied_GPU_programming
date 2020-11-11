@@ -34,6 +34,10 @@ __global__ void count_nom(int *d_res, curandState *states){
     const int s_idx = threadIdx.x;
     __shared__ int s_prod[TPB];
 
+    for(int i = 0; i < TPB; i++){
+        s_prod[i] = 0;
+    }
+
     int seed = idx; // different seed per thread
     curand_init(seed, idx, 0, &states[idx]);
 
@@ -48,18 +52,16 @@ __global__ void count_nom(int *d_res, curandState *states){
             s_prod[s_idx]++;
         }
     }
-
+    __syncthreads();
     if (s_idx == 0) {
-    int blockSum = 0;
-    for (int j = 0; j < blockDim.x; ++j) {
-      blockSum += s_prod[j];
+        int blockSum = 0;
+        for (int j = 0; j < blockDim.x; ++j) {
+            blockSum += s_prod[j];
+        }
+        atomicAdd(d_res, blockSum);
     }
-    printf("Block_%d, blockSum = %d\n", blockIdx.x, blockSum);
-    // Try each of two versions of adding to the accumulator
-    if (ATOMIC) {
-      atomicAdd(d_res, blockSum);
-    }
-  }
+
+  
 
 }
 
