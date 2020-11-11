@@ -91,64 +91,79 @@ ASSIGNMENT_2:
 
 ---------------------------------------------------------------------------------------------------
 
- BONUS: 1000 iter per thread
+ BONUS: 100000000 iterations 
 
-  The result is 3.142254
-  THREADS PER BLOCK: 16
-  The execution time is 0.024055
+  The result is 3.141672
+  Block size: 16
+  Iterations per thread: 10000
+  The execution time is 0.217668
 
-  The result is 3.142254
-  THREADS PER BLOCK: 32
-  The execution time is 0.023237
-
-  The result is 3.142254
-  THREADS PER BLOCK: 64
-  The execution time is 0.022064
-
-  The result is 3.142254
-  THREADS PER BLOCK: 128
-  The execution time is 0.021737
+  The result is 3.141672
+  Block size: 32
+  Iterations per thread: 10000
+  The execution time is 0.110919
 
   
-  The result is 3.142254
-  THREADS PER BLOCK: 256
-  The execution time is 0.022984
+  The result is 3.141672
+  Block size: 64
+  Iterations per thread: 10000
+  The execution time is 0.112747  
+
+  The result is 3.141672
+  Block size: 128
+  Iterations per thread: 10000
+  The execution time is 0.112759
+
+
+  The result is 3.141672
+  Block size: 256
+  Iterations per thread: 10000
+  The execution time is 0.116848
 
 ---------------------------------------------------------------------------------------------------
 
-  The result is 3.141495
-  THREADS PER BLOCK: 16
-  NUM_ITER_THREADS: 100000
-  The execution time is 2.134947
+  10000 iterations
+
+  The result is 3.124400
+  Block size: 256
+  Iterations per thread: 1
+  The execution time is 0.003493
+
+  100000
+
+  The result is 3.141160
+  Block size: 256
+  Iterations per thread: 10
+  The execution time is 0.003467
+
+  1000000
+
+  The result is 3.140060
+  Block size: 256
+  Iterations per thread: 100
+  The execution time is 0.004071
+
+  10000000
+
+  The result is 3.142254
+  Block size: 256
+  Iterations per thread: 1000
+  The execution time is 0.014160
+
+  100000000
+
+  The result is 3.141672
+  Block size: 16
+  Iterations per thread: 10000
+  The execution time is 0.217668
+
+  1000000000
 
   The result is 3.141495
-  THREADS PER BLOCK: 32
-  NUM_ITER_THREADS: 100000
-  The execution time is 1.887504
-
-  The result is 3.141495
-  THREADS PER BLOCK: 64
-  NUM_ITER_THREADS: 100000
-  The execution time is 1.889987
+  Block size: 256
+  Iterations per thread: 100000
+  The execution time is 1.095115
   
-  The result is 3.141495
-  THREADS PER BLOCK: 128
-  NUM_ITER_THREADS: 100000
-  The execution time is 1.881613
-
-  The result is 3.141495
-  THREADS PER BLOCK: 256 
-  NUM_ITER_THREADS: 100000
-  The execution time is 1.890538
-
----------------------------------------------------------------------------------------------------
-
-  Using float and not double
-
-  The result is 3.141495
-  THREADS PER BLOCK: 256
-  NUM_ITER_THREADS: 100000
-  The execution time is 1.885962
 
 
   
