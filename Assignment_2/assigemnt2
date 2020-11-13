@@ -173,6 +173,42 @@ ASSIGNMENT_2:
   Iterations per thread: 10000
   The execution time is 0.015823
 
+  ----------------------------------------------------------------------------------------------------
+  
+  NUM_ITERATIONS: 1000
+  NUM_PARTICLES: 1000000
+  BLOCK_SIZE: 16
+  datos incorrectos
+  Duration of the CPU: 17.785266
+  Duration of the GPU: 2.942852
+
+  NUM_ITERATIONS: 1000
+  NUM_PARTICLES: 1000000
+  BLOCK_SIZE: 32
+  datos correctos
+  Duration of the CPU: 17.867246
+  Duration of the GPU: 2.638114
+
+  NUM_ITERATIONS: 1000
+  NUM_PARTICLES: 1000000
+  BLOCK_SIZE: 64
+  datos correctos
+  Duration of the CPU: 17.747476
+  Duration of the GPU: 2.797266
+
+  NUM_ITERATIONS: 1000
+  NUM_PARTICLES: 1000000
+  BLOCK_SIZE: 128
+  datos correctos
+  Duration of the CPU: 17.728356
+  Duration of the GPU: 2.717988
+  
+  NUM_ITERATIONS: 1000
+  NUM_PARTICLES: 1000000
+  BLOCK_SIZE: 256
+  datos correctos
+  Duration of the CPU: 17.731635
+  Duration of the GPU: 2.624231
 
   
 
