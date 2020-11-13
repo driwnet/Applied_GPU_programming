@@ -198,4 +198,43 @@ Duration of the CPU: 1.727290
 Duration of the GPU: 0.265126
 Duration of the copy: 0.000336
 --------------------------------------------
-
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 1000000
+BLOCK_SIZE: 16
+datos correctos
+Duration of the CPU: 17.595803
+Duration of the GPU: 2.864669
+Duration of the copy: 0.009751
+--------------------------------------------
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 1000000
+BLOCK_SIZE: 32
+datos correctos
+Duration of the CPU: 17.563003
+Duration of the GPU: 2.602287
+Duration of the copy: 0.010137
+--------------------------------------------
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 1000000
+BLOCK_SIZE: 64
+datos incorrectos
+Duration of the CPU: 17.553584
+Duration of the GPU: 2.775185
+Duration of the copy: 0.002591
+--------------------------------------------
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 1000000
+BLOCK_SIZE: 128
+datos incorrectos
+Duration of the CPU: 17.577234
+Duration of the GPU: 2.668887
+Duration of the copy: 0.002591
+--------------------------------------------
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 1000000
+BLOCK_SIZE: 256
+datos incorrectos
+Duration of the CPU: 17.549809
+Duration of the GPU: 2.580285
+Duration of the copy: 0.002585
+--------------------------------------------
