@@ -1,0 +1,201 @@
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 10
+BLOCK_SIZE: 16
+datos correctos
+Duration of the CPU: 0.000718
+Duration of the GPU: 0.062032
+Duration of the copy: 0.000014
+--------------------------------------------
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 10
+BLOCK_SIZE: 32
+datos incorrectos
+Duration of the CPU: 0.000216
+Duration of the GPU: 0.002844
+Duration of the copy: 0.000010
+--------------------------------------------
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 10
+BLOCK_SIZE: 64
+datos incorrectos
+Duration of the CPU: 0.000191
+Duration of the GPU: 0.002819
+Duration of the copy: 0.000010
+--------------------------------------------
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 10
+BLOCK_SIZE: 128
+datos incorrectos
+Duration of the CPU: 0.000191
+Duration of the GPU: 0.002835
+Duration of the copy: 0.000008
+--------------------------------------------
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 10
+BLOCK_SIZE: 256
+datos incorrectos
+Duration of the CPU: 0.000176
+Duration of the GPU: 0.003405
+Duration of the copy: 0.000013
+--------------------------------------------
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 100
+BLOCK_SIZE: 16
+datos correctos
+Duration of the CPU: 0.003023
+Duration of the GPU: 0.061566
+Duration of the copy: 0.000016
+--------------------------------------------
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 100
+BLOCK_SIZE: 32
+datos incorrectos
+Duration of the CPU: 0.001757
+Duration of the GPU: 0.002794
+Duration of the copy: 0.000010
+--------------------------------------------
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 100
+BLOCK_SIZE: 64
+datos incorrectos
+Duration of the CPU: 0.001757
+Duration of the GPU: 0.003277
+Duration of the copy: 0.000009
+--------------------------------------------
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 100
+BLOCK_SIZE: 128
+datos incorrectos
+Duration of the CPU: 0.001756
+Duration of the GPU: 0.003468
+Duration of the copy: 0.000010
+--------------------------------------------
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 100
+BLOCK_SIZE: 256
+datos incorrectos
+Duration of the CPU: 0.001825
+Duration of the GPU: 0.003648
+Duration of the copy: 0.000015
+--------------------------------------------
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 1000
+BLOCK_SIZE: 16
+datos correctos
+Duration of the CPU: 0.024173
+Duration of the GPU: 0.067797
+Duration of the copy: 0.000025
+--------------------------------------------
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 1000
+BLOCK_SIZE: 32
+datos incorrectos
+Duration of the CPU: 0.017846
+Duration of the GPU: 0.005255
+Duration of the copy: 0.000017
+--------------------------------------------
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 1000
+BLOCK_SIZE: 64
+datos incorrectos
+Duration of the CPU: 0.017328
+Duration of the GPU: 0.005556
+Duration of the copy: 0.000017
+--------------------------------------------
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 1000
+BLOCK_SIZE: 128
+datos incorrectos
+Duration of the CPU: 0.017138
+Duration of the GPU: 0.005355
+Duration of the copy: 0.000016
+--------------------------------------------
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 1000
+BLOCK_SIZE: 256
+datos incorrectos
+Duration of the CPU: 0.017006
+Duration of the GPU: 0.007240
+Duration of the copy: 0.000017
+--------------------------------------------
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 10000
+BLOCK_SIZE: 16
+datos correctos
+Duration of the CPU: 0.178154
+Duration of the GPU: 0.071606
+Duration of the copy: 0.000132
+--------------------------------------------
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 10000
+BLOCK_SIZE: 32
+datos correctos
+Duration of the CPU: 0.170810
+Duration of the GPU: 0.028792
+Duration of the copy: 0.000128
+--------------------------------------------
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 10000
+BLOCK_SIZE: 64
+datos incorrectos
+Duration of the CPU: 0.170942
+Duration of the GPU: 0.029088
+Duration of the copy: 0.000055
+--------------------------------------------
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 10000
+BLOCK_SIZE: 128
+datos incorrectos
+Duration of the CPU: 0.171080
+Duration of the GPU: 0.029248
+Duration of the copy: 0.000051
+--------------------------------------------
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 10000
+BLOCK_SIZE: 256
+datos incorrectos
+Duration of the CPU: 0.171782
+Duration of the GPU: 0.030433
+Duration of the copy: 0.000054
+--------------------------------------------
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 100000
+BLOCK_SIZE: 16
+datos correctos
+Duration of the CPU: 1.746300
+Duration of the GPU: 0.335377
+Duration of the copy: 0.001118
+--------------------------------------------
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 100000
+BLOCK_SIZE: 32
+datos correctos
+Duration of the CPU: 1.727748
+Duration of the GPU: 0.262520
+Duration of the copy: 0.001150
+--------------------------------------------
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 100000
+BLOCK_SIZE: 64
+datos incorrectos
+Duration of the CPU: 1.727716
+Duration of the GPU: 0.270183
+Duration of the copy: 0.000338
+--------------------------------------------
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 100000
+BLOCK_SIZE: 128
+datos incorrectos
+Duration of the CPU: 1.726939
+Duration of the GPU: 0.267960
+Duration of the copy: 0.000334
+--------------------------------------------
+NUM_ITERATIONS: 1000
+NUM_PARTICLES: 100000
+BLOCK_SIZE: 256
+datos incorrectos
+Duration of the CPU: 1.727290
+Duration of the GPU: 0.265126
+Duration of the copy: 0.000336
+--------------------------------------------
+
