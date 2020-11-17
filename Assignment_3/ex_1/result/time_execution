@@ -1,0 +1,32 @@
+Assignment 3:
+
+Ex1:
+
+hk.bmp
+Image opened (width=4608 height=2880).
+Step #1 Completed - Result stored in "images/hw3_result_1.bmp".
+Elapsed CPU: 68.768000ms / Elapsed GPU: 14.457000ms
+Step #2 Completed - Result stored in "images/hw3_result_2.bmp".
+Elapsed CPU: 411.276000ms / Elapsed GPU: 12.230000ms
+Step #3 Completed - Result stored in "images/hw3_result_3.bmp".
+Elapsed CPU: 828.249000ms / Elapsed GPU: 3.083000ms
+
+nyc.bmp
+Image opened (width=6000 height=4000).
+Step #1 Completed - Result stored in "images/nyc_result_1.bmp".
+Elapsed CPU: 121.089000ms / Elapsed GPU: 25.900000ms
+Step #2 Completed - Result stored in "images/nyc_result_2.bmp".
+Elapsed CPU: 714.945000ms / Elapsed GPU: 21.327000ms
+Step #3 Completed - Result stored in "images/nyc_result_3.bmp".
+Elapsed CPU: 1482.977000ms / Elapsed GPU: 2.952000ms
+
+rome.bmp
+Image opened (width=3300 height=2468).
+Step #1 Completed - Result stored in "images/rome_result_1.bmp".
+Elapsed CPU: 43.550000ms / Elapsed GPU: 9.084000ms
+Step #2 Completed - Result stored in "images/rome_result_2.bmp".
+Elapsed CPU: 266.054000ms / Elapsed GPU: 7.405000ms
+Step #3 Completed - Result stored in "images/rome_result_3.bmp".
+Elapsed CPU: 527.518000ms / Elapsed GPU: 2.946000ms
+
+
