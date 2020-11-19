@@ -79,7 +79,6 @@ int main( int argc, char *argv[]){
     //Start GPU part
 
     start_GPU = cpuSecond();
-    cudaMalloc(&particlesGPU, NUM_PARTICLES * sizeof(particle));
 
     for(int i = 0; i < NUM_ITERATIONS; i++){
         timeStep<<<GRID, BLOCK_SIZE>>>(particlesGPU, i, NUM_PARTICLES);
@@ -92,22 +91,22 @@ int main( int argc, char *argv[]){
 
     diferencia_GPU = stop_GPU - start_GPU;
 
-/*     for(int i = 0; i < NUM_PARTICLES && bien; i++){
+     for(int i = 0; i < NUM_PARTICLES && bien; i++){
         for(int dim = 0; dim < 3 && bien; dim++){
             if(abs(particlesCPU[i].position[dim] - particlesGPU[i].position[dim]) > error ){
                 bien = false;
             }
         }
-    } */
+    } 
 
     printf("NUM_ITERATIONS: %d\n", NUM_ITERATIONS);
     printf("NUM_PARTICLES: %d\n", NUM_PARTICLES);
     printf("BLOCK_SIZE: %d\n", BLOCK_SIZE);
-/*     if(bien){
+     if(bien){
         printf("datos correctos\n");
     }else{
         printf("datos incorrectos\n");
-    } */
+    } 
         
     cudaFree(particlesGPU);
     cudaFree(particlesCPU);
