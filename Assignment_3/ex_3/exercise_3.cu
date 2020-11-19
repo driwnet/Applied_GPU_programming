@@ -8,7 +8,7 @@
 #define NUM_ITERATIONS 1000
 #define NUM_PARTICLES 10000
 #define BLOCK_SIZE 256
-#define NSTREAMS 2
+#define NSTREAMS 4
 
 struct particle {
     float position[3];
@@ -33,10 +33,9 @@ __host__ __device__ void uptdateParticle(particle *particula, int iter, int id, 
     particula[id].position[2] = particula[id].position[2] + particula[id].velocity[2]; 
 }
 
-__global__ void timeStep(particle *particles, int iter, int num_p, int offset){
-
+__global__ void timeStep(particle *particles, int iter, int num_p, int offset, int s, int streamSize){
     const int id = offset + threadIdx.x + blockIdx.x*blockDim.x;
-    if(id < num_p){
+    if(id < num_p && id < ((s+1)*streamSize)){
         uptdateParticle(particles, iter, id, num_p);
     }
 }
@@ -102,7 +101,7 @@ int main( int argc, char *argv[]){
         int offset = s * streamSize;
         for(int i = 0; i < NUM_ITERATIONS; i++){
             
-            timeStep<<<GRID, BLOCK_SIZE, 0, stream[s]>>>(particlesGPU, i, NUM_PARTICLES, offset);
+            timeStep<<<GRID, BLOCK_SIZE, 0, stream[s]>>>(particlesGPU, i, NUM_PARTICLES, offset, s, streamSize);
         
         }
         
