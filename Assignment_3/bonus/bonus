@@ -1,0 +1,94 @@
+Bonus:
+
+./exercise_3.out -s 64 -v
+
+Matrix size: 64x64
+Matrix size: 64x64
+Grid size: 4x4
+Tile size: 16x16
+Run CPU sgemm: 1
+
+CPU matmul:			0.863000 ms
+GPU cuBLAS matmul:		0.041000 ms
+GPU matmul (global memory):	0.082000 ms
+GPU matmul (shared memory):	0.016000 ms
+
+./exercise_3.out -s 128 -v
+
+Matrix size: 128x128
+Matrix size: 128x128
+Grid size: 8x8
+Tile size: 16x16
+Run CPU sgemm: 1
+
+CPU matmul:			6.972000 ms
+GPU cuBLAS matmul:		0.055000 ms
+GPU matmul (global memory):	0.454000 ms
+GPU matmul (shared memory):	0.065000 ms
+
+256
+
+Matrix size: 256x256
+Matrix size: 256x256
+Grid size: 16x16
+Tile size: 16x16
+Run CPU sgemm: 1
+
+CPU matmul:			56.515000 ms
+GPU cuBLAS matmul:		0.512000 ms
+GPU matmul (global memory):	3.242000 ms
+GPU matmul (shared memory):	0.347000 ms
+
+512
+
+Matrix size: 512x512
+Matrix size: 512x512
+Grid size: 32x32
+Tile size: 16x16
+Run CPU sgemm: 1
+
+CPU matmul:			445.204000 ms
+GPU cuBLAS matmul:		0.515000 ms
+GPU matmul (global memory):	27.520000 ms
+GPU matmul (shared memory):	3.270000 ms
+
+1024
+
+Matrix size: 1024x1024
+Matrix size: 1024x1024
+Grid size: 64x64
+Tile size: 16x16
+Run CPU sgemm: 1
+
+CPU matmul:			3576.354000 ms
+GPU cuBLAS matmul:		3.547000 ms
+GPU matmul (global memory):	215.456000 ms
+GPU matmul (shared memory):	22.627000 ms
+
+2048
+
+Matrix size: 2048x2048
+Matrix size: 2048x2048
+Grid size: 128x128
+Tile size: 16x16
+Run CPU sgemm: 1
+
+CPU matmul:			29053.599000 ms
+GPU cuBLAS matmul:		27.881000 ms
+GPU matmul (global memory):	1694.127000 ms
+GPU matmul (shared memory):	179.679000 ms
+
+4096
+
+Matrix size: 4096x4096
+Matrix size: 4096x4096
+Grid size: 256x256
+Tile size: 16x16
+Run CPU sgemm: 1
+
+CPU matmul:			233252.684000 ms
+GPU cuBLAS matmul:		227.387000 ms
+GPU matmul (global memory):	13809.375000 ms
+GPU matmul (shared memory):	1418.622000 ms
+
+
