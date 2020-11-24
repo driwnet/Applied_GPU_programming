@@ -56,6 +56,7 @@ int main( int argc, char *argv[]){
 
     particle *particlesCPU = (particle*)malloc(NUM_PARTICLES * sizeof(particle));
     particle *particlesGPU;= (particle*)malloc(NUM_PARTICLES * sizeof(particle));
+    particle *resCPU;
     cudaMallocHost(&resCPU, NUM_PARTICLES * sizeof(particle));
     memset(resCPU,0,NUM_PARTICLES * sizeof(particle));
 
