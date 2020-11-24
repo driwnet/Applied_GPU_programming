@@ -1,0 +1,46 @@
+Exercise 1:
+
+hw3:
+
+Image opened (width=3840 height=2160).
+Step #1 Completed - Result stored in "images/hw3_result_1.bmp".
+Elapsed CPU: 0.000000ms / Elapsed GPU: 20.396000ms
+Step #2 Completed - Result stored in "images/hw3_result_2.bmp".
+Elapsed CPU: 0.000000ms / Elapsed GPU: 32.305000ms
+Step #3 Completed - Result stored in "images/hw3_result_3.bmp".
+Elapsed CPU: 0.000000ms / Elapsed GPU: 8.326000ms
+
+
+hk:
+
+Image opened (width=4608 height=2880).
+Step #1 Completed - Result stored in "images/hk_result_1.bmp".
+Elapsed CPU: 0.000000ms / Elapsed GPU: 32.546000ms
+Step #2 Completed - Result stored in "images/hk_result_2.bmp".
+Elapsed CPU: 0.000000ms / Elapsed GPU: 45.909000ms
+Step #3 Completed - Result stored in "images/hk_result_3.bmp".
+Elapsed CPU: 0.000000ms / Elapsed GPU: 12.567000ms
+
+
+nyc:
+
+Image opened (width=6000 height=4000).
+Step #1 Completed - Result stored in "images/nyc_result_1.bmp".
+Elapsed CPU: 0.000000ms / Elapsed GPU: 57.146000ms
+Step #2 Completed - Result stored in "images/nyc_result_2.bmp".
+Elapsed CPU: 0.000000ms / Elapsed GPU: 58.162000ms
+Step #3 Completed - Result stored in "images/nyc_result_3.bmp".
+Elapsed CPU: 0.000000ms / Elapsed GPU: 27.367000ms
+
+
+rome:
+
+Image opened (width=3300 height=2468).
+Step #1 Completed - Result stored in "images/rome_result_1.bmp".
+Elapsed CPU: 0.001000ms / Elapsed GPU: 19.736000ms
+Step #2 Completed - Result stored in "images/rome_result_2.bmp".
+Elapsed CPU: 0.000000ms / Elapsed GPU: 36.335000ms
+Step #3 Completed - Result stored in "images/rome_result_3.bmp".
+Elapsed CPU: 0.000000ms / Elapsed GPU: 8.313000ms
+
+
