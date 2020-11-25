@@ -39,7 +39,17 @@ __global__ void timeStep(particle *particles, int iter, int num_p){
     }
 }
 
+void init_Array(particle *particulas){
+    for(int i = 0; i < NUM_PARTICLES; i++){
+        particulas[i].position[0] = rand() % 1000;
+        particulas[i].position[1] = rand() % 1000;
+        particulas[i].position[2] = rand() % 1000;
 
+        particulas[i].velocity[0] = rand() % 1000;
+        particulas[i].velocity[1] = rand() % 1000;
+        particulas[i].velocity[2] = rand() % 1000;
+    }
+}
 
 int main( int argc, char *argv[]){
 
@@ -58,6 +68,9 @@ int main( int argc, char *argv[]){
     cudaMallocManaged(&particlesCPU, NUM_PARTICLES * sizeof(particle));
     particle *particlesGPU;
     cudaMallocManaged(&particlesGPU, NUM_PARTICLES * sizeof(particle));
+
+    init_Array(particlesCPU);
+    cudaMemcpy(particlesGPU, particlesCPU, NUM_PARTICLES*sizeof(particle), cudaMemcpyHostToHost);
 
 
     // CPU part//
@@ -79,22 +92,24 @@ int main( int argc, char *argv[]){
     //Start GPU part
 
     start_GPU = cpuSecond();
+    
 
     for(int i = 0; i < NUM_ITERATIONS; i++){
         timeStep<<<GRID, BLOCK_SIZE>>>(particlesGPU, i, NUM_PARTICLES);
-        cudaDeviceSynchronize();
+        
     }
 
-    
+    cudaDeviceSynchronize();
 
     stop_GPU = cpuSecond();
 
     diferencia_GPU = stop_GPU - start_GPU;
 
      for(int i = 0; i < NUM_PARTICLES && bien; i++){
-        for(int dim = 0; dim < 3 && bien; dim++){
-            if(abs(particlesCPU[i].position[dim] - particlesGPU[i].position[dim]) > error ){
+        for(int dim = 0; dim < 3; dim++){
+            if(fabs(particlesCPU[i].position[dim] - particlesGPU[i].position[dim]) > error ){
                 bien = false;
+                break;
             }
         }
     } 
