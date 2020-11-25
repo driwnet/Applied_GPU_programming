@@ -134,7 +134,6 @@ int main( int argc, char *argv[]){
     for(int i = 0; i < NUM_PARTICLES && bien; i++){
         for(int dim = 0; dim < 3; dim++){
             if(fabs(particlesCPU[i].position[dim] - resCPU[i].position[dim]) > error ){
-                printf("error: %d %d\n", i, dim);
                 bien = false;
                 break;
             }
