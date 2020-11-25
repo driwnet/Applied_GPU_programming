@@ -46,9 +46,10 @@ int main(){
     cudaMemcpy(y, d_y, ARRAY_SIZE * sizeof(float), cudaMemcpyDeviceToHost);
     printf("Computing SAXPY on the GPU.. Done!\n");
 
-    for( int i = 0; i < ARRAY_SIZE && comp; i++){
+    for( int i = 0; i < ARRAY_SIZE; i++){
         if (abs(res[i] - y[i]) > error){
             comp = false;
+            break;
         }
     }
     if(comp){
