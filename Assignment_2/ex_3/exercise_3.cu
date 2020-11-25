@@ -6,8 +6,8 @@
 #define error 1e-6
 
 #define NUM_ITERATIONS 1000
-#define BLOCK_SIZE 16
 #define NUM_PARTICLES 10000
+#define BLOCK_SIZE 256
 
 struct particle {
     float position[3];
@@ -39,9 +39,21 @@ __global__ void timeStep(particle *particles, int iter, int num_p){
     }
 }
 
+void init_Array(particle *particulas){
+    for(int i = 0; i < NUM_PARTICLES; i++){
+        particulas[i].position[0] = rand() % 1000;
+        particulas[i].position[1] = rand() % 1000;
+        particulas[i].position[2] = rand() % 1000;
+
+        particulas[i].velocity[0] = rand() % 1000;
+        particulas[i].velocity[1] = rand() % 1000;
+        particulas[i].velocity[2] = rand() % 1000;
+    }
+}
 
 
 int main( int argc, char *argv[]){
+
 
     bool bien = true;
     int GRID = (NUM_PARTICLES + BLOCK_SIZE - 1)/BLOCK_SIZE;
@@ -49,13 +61,16 @@ int main( int argc, char *argv[]){
 
     double start_GPU, stop_GPU;
     double start_CPU, stop_CPU;
-    double diferencia_CPU, diferencia_GPU;
+    double diferencia_CPU, diferencia_GPU, diferencia_copy;
+    double start_copy, stop_copy;
 
 
     particle *particlesCPU = (particle*)malloc(NUM_PARTICLES * sizeof(particle));
     particle *particlesGPU;
     particle *resCPU = (particle*)malloc(NUM_PARTICLES * sizeof(particle));
-
+    cudaMalloc(&particlesGPU, NUM_PARTICLES * sizeof(particle));
+    init_Array(particlesCPU);
+    cudaMemcpy(particlesGPU, particlesCPU, NUM_PARTICLES * sizeof(particle), cudaMemcpyHostToDevice);
     // CPU part//
 
     start_CPU = cpuSecond();
@@ -75,17 +90,23 @@ int main( int argc, char *argv[]){
     //Start GPU part
 
     start_GPU = cpuSecond();
-    cudaMalloc(&particlesGPU, NUM_PARTICLES * sizeof(particle));
+    
+
 
     for(int i = 0; i < NUM_ITERATIONS; i++){
         timeStep<<<GRID, BLOCK_SIZE>>>(particlesGPU, i, NUM_PARTICLES);
     }
 
     cudaDeviceSynchronize();
+
+
+    start_copy = cpuSecond();
     cudaMemcpy(resCPU, particlesGPU, NUM_PARTICLES * sizeof(particle), cudaMemcpyDeviceToHost);
+    stop_copy = cpuSecond();
 
     stop_GPU = cpuSecond();
 
+    diferencia_copy = stop_copy - start_copy;
     diferencia_GPU = stop_GPU - start_GPU;
 
     for(int i = 0; i < NUM_PARTICLES && bien; i++){
@@ -111,7 +132,8 @@ int main( int argc, char *argv[]){
 
     printf("Duration of the CPU: %f\n", diferencia_CPU);
     printf("Duration of the GPU: %f\n", diferencia_GPU);
-
+    printf("Duration of the copy: %f\n", diferencia_copy);
+    printf("--------------------------------------------\n");
     return 0;
 
 
