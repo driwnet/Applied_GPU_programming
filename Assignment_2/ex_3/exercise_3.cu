@@ -110,9 +110,10 @@ int main( int argc, char *argv[]){
     diferencia_GPU = stop_GPU - start_GPU;
 
     for(int i = 0; i < NUM_PARTICLES && bien; i++){
-        for(int dim = 0; dim < 3 && bien; dim++){
+        for(int dim = 0; dim < 3; dim++){
             if(abs(particlesCPU[i].position[dim] - resCPU[i].position[dim]) > error ){
                 bien = false;
+                break;
             }
         }
     }
