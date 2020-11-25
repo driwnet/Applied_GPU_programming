@@ -39,7 +39,17 @@ __global__ void timeStep(particle *particles, int iter, int num_p){
     }
 }
 
+void init_Array(particle *particulas){
+    for(int i = 0; i < NUM_PARTICLES; i++){
+        particulas[i].position[0] = rand() % 1000;
+        particulas[i].position[1] = rand() % 1000;
+        particulas[i].position[2] = rand() % 1000;
 
+        particulas[i].velocity[0] = rand() % 1000;
+        particulas[i].velocity[1] = rand() % 1000;
+        particulas[i].velocity[2] = rand() % 1000;
+    }
+}
 
 int main( int argc, char *argv[]){
 
@@ -57,8 +67,15 @@ int main( int argc, char *argv[]){
     particle *particlesCPU = (particle*)malloc(NUM_PARTICLES * sizeof(particle));
     particle *particlesGPU;
     particle *resCPU;
+
     cudaMallocHost(&resCPU, NUM_PARTICLES * sizeof(particle));
-    memset(resCPU,0,NUM_PARTICLES * sizeof(particle));
+
+    cudaMalloc(&particlesGPU, NUM_PARTICLES * sizeof(particle));
+
+    init_Array(particlesCPU);
+
+    cudaMemcpy(resCPU, particlesCPU, NUM_PARTICLES*sizeof(particle), cudaMemcpyHostToHost);
+
 
     // CPU part//
 
@@ -79,11 +96,13 @@ int main( int argc, char *argv[]){
     //Start GPU part
 
     start_GPU = cpuSecond();
-    cudaMalloc(&particlesGPU, NUM_PARTICLES * sizeof(particle));
+    
 
     for(int i = 0; i < NUM_ITERATIONS; i++){
         
+
         cudaMemcpy(particlesGPU, resCPU, sizeof(particle) * NUM_PARTICLES, cudaMemcpyHostToDevice);
+
         
         timeStep<<<GRID, BLOCK_SIZE>>>(particlesGPU, i, NUM_PARTICLES);
         cudaDeviceSynchronize();
@@ -97,9 +116,10 @@ int main( int argc, char *argv[]){
     diferencia_GPU = stop_GPU - start_GPU;
 
     for(int i = 0; i < NUM_PARTICLES && bien; i++){
-        for(int dim = 0; dim < 3 && bien; dim++){
-            if(abs(particlesCPU[i].position[dim] - resCPU[i].position[dim]) > error ){
+        for(int dim = 0; dim < 3; dim++){
+            if(fabs(particlesCPU[i].position[dim] - resCPU[i].position[dim]) > error ){
                 bien = false;
+                break;
             }
         }
     }
