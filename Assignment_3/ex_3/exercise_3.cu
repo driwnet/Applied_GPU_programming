@@ -6,9 +6,11 @@
 #define error 1e-6
 
 #define NUM_ITERATIONS 1000
-#define NUM_PARTICLES 10000
+#define NUM_PARTICLES 100000
 #define BLOCK_SIZE 256
 #define NSTREAMS 4
+#define SIZE_BATCH 
+
 
 struct particle {
     float position[3];
@@ -40,7 +42,17 @@ __global__ void timeStep(particle *particles, int iter, int num_p, int offset, i
     }
 }
 
+void init_Array(particle *particulas){
+    for(int i = 0; i < NUM_PARTICLES; i++){
+        particulas[i].position[0] = rand() % 1000;
+        particulas[i].position[1] = rand() % 1000;
+        particulas[i].position[2] = rand() % 1000;
 
+        particulas[i].velocity[0] = rand() % 1000;
+        particulas[i].velocity[1] = rand() % 1000;
+        particulas[i].velocity[2] = rand() % 1000;
+    }
+}
 
 int main( int argc, char *argv[]){
 
@@ -58,8 +70,13 @@ int main( int argc, char *argv[]){
     particle *particlesGPU;
     particle *resCPU;
 
-    cudaMallocHost((void**)&resCPU, NUM_PARTICLES * sizeof(particle));
-    memset(resCPU,0,NUM_PARTICLES * sizeof(particle));
+    cudaMallocHost(&resCPU, NUM_PARTICLES * sizeof(particle));
+
+    cudaMalloc(&particlesGPU, NUM_PARTICLES * sizeof(particle));
+
+    init_Array(particlesCPU);
+
+    cudaMemcpy(resCPU, particlesCPU, NUM_PARTICLES*sizeof(particle), cudaMemcpyHostToHost);
 
     const int streamSize = NUM_PARTICLES / NSTREAMS;
     const int StreamBytes = streamSize * sizeof(particle);
@@ -88,34 +105,27 @@ int main( int argc, char *argv[]){
     //Start GPU part
 
     start_GPU = cpuSecond();
-    cudaMalloc((void**)&particlesGPU, NUM_PARTICLES * sizeof(particle));
+
+    
 
     for(int s = 0; s < NSTREAMS; s++){
         
         int offset = s * streamSize;
+
         cudaMemcpyAsync(&particlesGPU[offset], &resCPU[offset], StreamBytes, cudaMemcpyHostToDevice, stream[s]);
-    }
 
-    for(int s = 0; s < NSTREAMS; s++){
-        
-        int offset = s * streamSize;
         for(int i = 0; i < NUM_ITERATIONS; i++){
             
             timeStep<<<GRID, BLOCK_SIZE, 0, stream[s]>>>(particlesGPU, i, NUM_PARTICLES, offset, s, streamSize);
         
         }
-        
-    }
 
-    for(int s = 0; s < NSTREAMS; s++){
-        
-        int offset = s * streamSize;
         cudaMemcpyAsync(&resCPU[offset], &particlesGPU[offset], StreamBytes, cudaMemcpyDeviceToHost, stream[s]);
+
+        cudaStreamSynchronize(stream[s]);
     }
+        
 
-
-    
-    cudaDeviceSynchronize();
 
     stop_GPU = cpuSecond();
 
@@ -123,9 +133,10 @@ int main( int argc, char *argv[]){
 
     for(int i = 0; i < NUM_PARTICLES && bien; i++){
         for(int dim = 0; dim < 3; dim++){
-            if(abs(particlesCPU[i].position[dim] - resCPU[i].position[dim]) > error ){
+            if(fabs(particlesCPU[i].position[dim] - resCPU[i].position[dim]) > error ){
                 printf("error: %d %d\n", i, dim);
                 bien = false;
+                break;
             }
         }
     }
