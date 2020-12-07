@@ -20,8 +20,8 @@ const char* mykernel =
 "int lindex_y = get_local_id(1);                                        \n"
 "int group_id_x = get_group_id(0);                                      \n"
 "int group_id_y = get_group_id(1);                                      \n"
-"int num_g_x = get_num_groups(0);                                       \n"
-"int num_g_y = get_num_groups(1);                                       \n"
+"int num_g_x = get_local_size(0);                                       \n"
+"int num_g_y = get_local_size(1);                                       \n"
 "printf(\"Hello World! My threadId is %d \\n\", index_x + index_y);     \n"
 "int id = ((group_id_x * num_g_x) + lindex_x) + (group_id_y * num_g_y) + lindex_y); \n"
 "printf(\"Hello World! My local + group threadId is %d \\n\", id);}     \n";
