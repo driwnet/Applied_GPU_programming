@@ -7,8 +7,8 @@
 #include <sys/time.h>
 
 
-#define ARRAY_SIZE 10000;
-#define error 1e-6;
+#define ARRAY_SIZE 10000
+#define error 1e-6
 // This is a macro for checking the error variable:>.
 #define CHK_ERROR(err) if (err != CL_SUCCESS) fprintf(stderr,"Error: %s\n",clGetErrorString(err));
 
