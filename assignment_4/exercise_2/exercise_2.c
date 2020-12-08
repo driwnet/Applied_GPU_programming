@@ -46,6 +46,7 @@ int main(int argc, char **argv) {
     float a;
     int count = ARRAY_SIZE;
     bool correct = true;
+    int i;
 
     a = 3.0;
     cl_platform_id * platforms; cl_uint     n_platform;
@@ -87,14 +88,14 @@ int main(int argc, char **argv) {
     }
 
     //Initialize values of the arrays
-    for(int i = 0; i < ARRAY_SIZE; i++) {
+    for(i = 0; i < ARRAY_SIZE; i++) {
         x[i] = rand() / (float)RAND_MAX;
         y[i] = rand() / (float)RAND_MAX;
     }
 
     //Cpu part
     double start = cpuSecond();
-    for(int i = 0; i < ARRAY_SIZE; i++) {
+    for(i = 0; i < ARRAY_SIZE; i++) {
         results[i] = a * x[i] + y[i];
     }
     double totalCpu = cpuSecond() - start;        
@@ -171,7 +172,7 @@ int main(int argc, char **argv) {
     
 
 
-    for(int i = 0; i < ARRAY_SIZE; i++){
+    for(i = 0; i < ARRAY_SIZE; i++){
         if (fabs(results[i] - y[i]) > error){
             correct = false;
             break;
