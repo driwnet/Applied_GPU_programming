@@ -17,16 +17,16 @@ const char* clGetErrorString(int);
 
 
 const char *mykernel = 
-    "__kernel                                                 \n" 
-    "void kernel_saxpy(                                       \n"
-    "   const int n,                                          \n"
-    "   const float a,                                        \n"    
-    "   __global float* X,                                    \n"   
-    "   __global float* Y)                                    \n"
-    "{int index = get_global_id(0);                           \n"
-    "if(index < n)                                                \n"
-    " Y[index] = a * X[index] + Y[index];                             \n"
-    "}                                                        \n";
+"__kernel                                                 \n" 
+"void kernel_saxpy(                                       \n"
+"   const int n,                                          \n"
+"   const float a,                                        \n"    
+"   __global float* X,                                    \n"   
+"   __global float* Y)                                    \n"
+"{int index = get_global_id(0);                           \n"
+"if(index < n)                                                \n"
+" Y[index] = a * X[index] + Y[index];                             \n"
+"}                                                        \n";
 
 
 double cpuSecond() {
@@ -153,7 +153,7 @@ int main(int argc, char **argv) {
     size_t workgroup_size = 256;
 
 
-
+    double st = cpuSecond();
     //Launch kernel
     err = clEnqueueNDRangeKernel(cmd_queue, kernel, 1, NULL, &n_workitem, &workgroup_size, 0, NULL, NULL);
 
@@ -163,6 +163,7 @@ int main(int argc, char **argv) {
     }
 
     err = clEnqueueReadBuffer(cmd_queue, dy, CL_TRUE, 0, array, Y, 0, NULL, NULL);
+    double timeGpu = cpuSecond() - st;
     printf("Computing SACY on the GPU... Done\n");
 
     //Wait for everything to finish
@@ -184,6 +185,10 @@ int main(int argc, char **argv) {
     else {
         printf("Comparing the output for each implementation... Incorrect!\n");
     }
+
+    printf("Execution time on CPU: %f\n", totalCpu);
+    printf("Execution time on GPU: %f\n", timeGpu);
+
 
     // Finally, release all that we have allocated.
     clReleaseMemObject(dx);
