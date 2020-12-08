@@ -21,11 +21,11 @@ const char *mykernel =
     "void kernel_saxpy(                                       \n"
     "   const int n,                                          \n"
     "   const float a,                                        \n"    
-    "   __global float* x,                                    \n"   
-    "   __global float* y)                                    \n"
+    "   __global float* X,                                    \n"   
+    "   __global float* Y)                                    \n"
     "{int index = get_global_id(0);                           \n"
     "if(i < n)                                                \n"
-    " y[index] = a * x[i] + y[i];                             \n"
+    " Y[index] = a * X[i] + Y[i];                             \n"
     "}                                                        \n";
 
 
@@ -39,9 +39,7 @@ double cpuSecond() {
 int main(int argc, char **argv) {
 
     //All the variables used
-    float *x = (float*)malloc(ARRAY_SIZE*sizeof(float));
-    float *y = (float*)malloc(ARRAY_SIZE*sizeof(float));
-    float *results = (float*)malloc(ARRAY_SIZE*sizeof(float));
+    float X[ARRAY_SIZE], Y[ARRAY_SIZE], results[ARRAY_SIZE];
     float array = ARRAY_SIZE * sizeof(float);
     float a;
     int count = ARRAY_SIZE;
@@ -88,15 +86,16 @@ int main(int argc, char **argv) {
     }
 
     //Initialize values of the arrays
+ 
     for(i = 0; i < ARRAY_SIZE; i++) {
-        x[i] = rand() / (float)RAND_MAX;
-        y[i] = rand() / (float)RAND_MAX;
+        X[i] = rand() / (float)RAND_MAX;
+        Y[i] = rand() / (float)RAND_MAX;
     }
 
     //Cpu part
     double start = cpuSecond();
     for(i = 0; i < ARRAY_SIZE; i++) {
-        results[i] = a * x[i] + y[i];
+        results[i] = a * X[i] + Y[i];
     }
     double totalCpu = cpuSecond() - start;        
 
@@ -112,8 +111,8 @@ int main(int argc, char **argv) {
     }
 
     //Copy the values of X in dx
-    err = clEnqueueWriteBuffer(cmd_queue, dx, CL_TRUE, 0, array, x, 0, NULL, NULL);
-    err = clEnqueueWriteBuffer(cmd_queue, dy, CL_TRUE, 0, array, y, 0, NULL, NULL);
+    err = clEnqueueWriteBuffer(cmd_queue, dx, CL_TRUE, 0, array, X, 0, NULL, NULL);
+    err = clEnqueueWriteBuffer(cmd_queue, dy, CL_TRUE, 0, array, Y, 0, NULL, NULL);
 
     if (err != CL_SUCCESS) {
         printf("Error: Failed to write to source array!\n");
@@ -163,7 +162,7 @@ int main(int argc, char **argv) {
         return EXIT_FAILURE;
     }
 
-    err = clEnqueueReadBuffer(cmd_queue, dy, CL_TRUE, 0, array, y, 0, NULL, NULL);
+    err = clEnqueueReadBuffer(cmd_queue, dy, CL_TRUE, 0, array, Y, 0, NULL, NULL);
     printf("Computing SACY on the GPU... Done\n");
 
     //Wait for everything to finish
@@ -173,7 +172,7 @@ int main(int argc, char **argv) {
 
 
     for(i = 0; i < ARRAY_SIZE; i++){
-        if (fabs(results[i] - y[i]) > error){
+        if (fabs(results[i] - Y[i]) > error){
             correct = false;
             break;
         }
@@ -296,5 +295,6 @@ const char* clGetErrorString(int errorCode) {
     default: return "CL_UNKNOWN_ERROR";
     }
 }
+
 
 
