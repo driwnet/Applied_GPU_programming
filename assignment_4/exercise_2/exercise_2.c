@@ -37,6 +37,17 @@ double cpuSecond() {
 
 
 int main(int argc, char **argv) {
+
+    //All the variables used
+    float x[ARRAY_SIZE];
+    float y[ARRAY_SIZE];
+    float results[ARRAY_SIZE];
+    float array = ARRAY_SIZE * sizeof(float);
+    float a;
+    int count = ARRAY_SIZE;
+    bool correct = true;
+
+    a = 3.0;
     cl_platform_id * platforms; cl_uint     n_platform;
 
     // Find OpenCL Platforms
@@ -75,26 +86,15 @@ int main(int argc, char **argv) {
         return EXIT_FAILURE;
     }
 
-    //All the variables used
-    float x[ARRAY_SIZE];
-    float y[ARRAY_SIZE];
-    float results[ARRAY_SIZE];
-    float array = ARRAY_SIZE * sizeof(float);
-    float a;
-    int count = ARRAY_SIZE;
-    bool correct = true;
-
-    a = 3.0;
-
     //Initialize values of the arrays
-    for (int i = 0; i < ARRAY_SIZE; i++) {
+    for(int i = 0; i < ARRAY_SIZE; i++) {
         x[i] = rand() / (float)RAND_MAX;
         y[i] = rand() / (float)RAND_MAX;
     }
 
     //Cpu part
     double start = cpuSecond();
-    for (int i = 0; i < ARRAY_SIZE; i++) {
+    for(int i = 0; i < ARRAY_SIZE; i++) {
         results[i] = a * x[i] + y[i];
     }
     double totalCpu = cpuSecond() - start;        
@@ -171,8 +171,8 @@ int main(int argc, char **argv) {
     
 
 
-    for (int i = 0; i < ARRAY_SIZE; i++) {
-        if (fabs(results[i] - y[i]) > error) {
+    for(int i = 0; i < ARRAY_SIZE; i++){
+        if (fabs(results[i] - y[i]) > error){
             correct = false;
             break;
         }
@@ -295,4 +295,5 @@ const char* clGetErrorString(int errorCode) {
     default: return "CL_UNKNOWN_ERROR";
     }
 }
+
 
