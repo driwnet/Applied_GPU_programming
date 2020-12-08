@@ -39,9 +39,9 @@ double cpuSecond() {
 int main(int argc, char **argv) {
 
     //All the variables used
-    float x[ARRAY_SIZE];
-    float y[ARRAY_SIZE];
-    float results[ARRAY_SIZE];
+    float *x = (float*)malloc(ARRAY_SIZE*sizeof(float));
+    float *y = (float*)malloc(ARRAY_SIZE*sizeof(float));
+    float *results = (float*)malloc(ARRAY_SIZE*sizeof(float));
     float array = ARRAY_SIZE * sizeof(float);
     float a;
     int count = ARRAY_SIZE;
