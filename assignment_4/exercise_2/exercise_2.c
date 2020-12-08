@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <CL/cl.h>
 #include <math.h>
+#include <sys/time.h>
 
 
 #define ARRAY_SIZE 10000;
@@ -23,8 +24,8 @@ const char *mykernel =
     "   __global float* x,                                    \n"   
     "   __global float* y)                                    \n"
     "{int index = get_global_id(0);                           \n"
-    "if(i < n){                                               \n"
-    " y[index] = a * x[i] + y[i];}                            \n"
+    "if(i < n)                                                \n"
+    " y[index] = a * x[i] + y[i];                             \n"
     "}                                                        \n";
 
 
@@ -53,16 +54,16 @@ int main(int argc, char **argv) {
     cl_context context = clCreateContext( NULL, n_devices, device_list, NULL, NULL, &err);CHK_ERROR(err);
 
     if (!context) {
-    printf("Error: Failed to create a compute context!\n");
-    return EXIT_FAILURE;
+        printf("Error: Failed to create a compute context!\n");
+        return EXIT_FAILURE;
     }
 
     // Create a command queue
     cl_command_queue cmd_queue = clCreateCommandQueue(context, device_list[0], 0, &err);CHK_ERROR(err); 
 
-    if (!commands) {
-    printf("Error: Failed to create a command queue!\n");
-    return EXIT_FAILURE;
+    if (!cmd_queue) {
+        printf("Error: Failed to create a command queue!\n");
+        return EXIT_FAILURE;
     }
 
     /* Insert your own code here */
@@ -70,14 +71,15 @@ int main(int argc, char **argv) {
     //program
     cl_program program = clCreateProgramWithSource(context, 1, (const char **)&mykernel, NULL, &err);
     if (!program) {
-    printf("Error: Failed to create compute program!\n");
-    return EXIT_FAILURE;
+        printf("Error: Failed to create compute program!\n");
+        return EXIT_FAILURE;
     }
 
     //All the variables used
     float x[ARRAY_SIZE];
     float y[ARRAY_SIZE];
     float results[ARRAY_SIZE];
+    float array = ARRAY_SIZE * sizeof(float);
     float a;
     int count = ARRAY_SIZE;
     bool correct = true;
@@ -100,8 +102,8 @@ int main(int argc, char **argv) {
     printf("Computing SAXPY on the CPU... Done\n");
 
     //Array on GPU part
-    cl_mem dx = clCreateBuffer(context, CL_MEM_READ_ONLY, ARRAY_SIZE * sizeof(float), &err);
-    cl_mem dy = clCreateBuffer(context, CL_MEM_READ_WRITE, ARRAY_SIZE * sizeof(float), &err);
+    cl_mem dx = clCreateBuffer(context, CL_MEM_READ_ONLY, array, NULL, &err);
+    cl_mem dy = clCreateBuffer(context, CL_MEM_READ_WRITE, array, NULL, &err);
 
     if (!dx || !dy) {
         printf("Error: Failed to allocate device memory!\n");
@@ -109,8 +111,8 @@ int main(int argc, char **argv) {
     }
 
     //Copy the values of X in dx
-    err = clEnqueueWriteBuffer(cmd_queue, dx, CL_TRUE, 0, ARRAY_SIZE * sizeof(float), x, 0, NULL, NULL);
-    err = clEnqueueWriteBuffer(cmd_queue, dy, CL_TRUE, 0, ARRAY_SIZE * sizeof(float), y, 0, NULL, NULL);
+    err = clEnqueueWriteBuffer(cmd_queue, dx, CL_TRUE, 0, array, x, 0, NULL, NULL);
+    err = clEnqueueWriteBuffer(cmd_queue, dy, CL_TRUE, 0, array, y, 0, NULL, NULL);
 
     if (err != CL_SUCCESS) {
         printf("Error: Failed to write to source array!\n");
@@ -131,8 +133,8 @@ int main(int argc, char **argv) {
     cl_kernel kernel = clCreateKernel(program, "kernel_saxpy", &err);
     
     if (!kernel || err != CL_SUCCESS) {
-    printf("Error: Failed to create compute kernel!\n");
-    exit(1);
+        printf("Error: Failed to create compute kernel!\n");
+        exit(1);
     }
 
     //Arguments for the Kernel function
@@ -160,11 +162,14 @@ int main(int argc, char **argv) {
         return EXIT_FAILURE;
     }
 
+    err = clEnqueueReadBuffer(cmd_queue, dy, CL_TRUE, 0, array, y, 0, NULL, NULL);
+    printf("Computing SACY on the GPU... Done\n");
 
     //Wait for everything to finish
-    clFinish(cmd_queue);
-    err = clEnqueueReadBuffer(cmd_queue, dy, CL_TRUE, 0, sizeof(float) * ARRAY_SIZE, y, 0, NULL, NULL);
-    printf("Computing SACY on the GPU... Done\n");
+    err = clFlush(cmd_queue);
+    err = clFinish(cmd_queue);
+    
+
 
     for (int i = 0; i < ARRAY_SIZE; i++) {
         if (fabs(results[i] - y[i]) > error) {
@@ -290,3 +295,4 @@ const char* clGetErrorString(int errorCode) {
     default: return "CL_UNKNOWN_ERROR";
     }
 }
+
