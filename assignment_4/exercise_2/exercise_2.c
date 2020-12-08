@@ -24,8 +24,8 @@ const char *mykernel =
     "   __global float* X,                                    \n"   
     "   __global float* Y)                                    \n"
     "{int index = get_global_id(0);                           \n"
-    "if(i < n)                                                \n"
-    " Y[index] = a * X[i] + Y[i];                             \n"
+    "if(index < n)                                                \n"
+    " Y[index] = a * X[index] + Y[index];                             \n"
     "}                                                        \n";
 
 
