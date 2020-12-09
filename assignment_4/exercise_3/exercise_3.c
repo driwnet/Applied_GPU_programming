@@ -1,5 +1,3 @@
-// Template file for the OpenCL Assignment 4
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <CL/cl.h>
@@ -90,41 +88,31 @@ int main(int argc, char **argv) {
     }
 
     // Create a command queue
-    cl_command_queue cmd_queue = clCreateCommandQueue(context, device_list[0], 0, &err);CHK_ERROR(err); 
+    cl_command_queue cmd_queue = clCreateCommandQueue(context, device_list[0], 0, &err);CHK_ERROR(err);
 
     if (!cmd_queue) {
         printf("Error: Failed to create a command queue!\n");
         return EXIT_FAILURE;
     }
 
+
     /* Insert your own code here */
 
     //program
-    cl_program program = clCreateProgramWithSource(context, 1, (const char **)&mykernel, NULL, &err);
-    if (!program) {
-        printf("Error: Failed to create compute program!\n");
-        return EXIT_FAILURE;
-    }
+    cl_program program = clCreateProgramWithSource(context, 1, (const char **)&mykernel, NULL, &err);CHK_ERROR(err);
+
 
     //Initialize values of the arrays
  
     init_Array(X);
 
     //Array on GPU part
-    cl_mem dx = clCreateBuffer(context, CL_MEM_READ_WRITE, array, NULL, &err);
+    cl_mem dx = clCreateBuffer(context, CL_MEM_READ_WRITE, array, NULL, &err);CHK_ERROR(err);
 
-    if (!dx) {
-        printf("Error: Failed to allocate device memory!\n");
-        exit(1);
-    }
 
     //Copy the values of X in dx
-    err = clEnqueueWriteBuffer(cmd_queue, dx, CL_TRUE, 0, array, X, 0, NULL, NULL);
+    err = clEnqueueWriteBuffer(cmd_queue, dx, CL_TRUE, 0, array, X, 0, NULL, NULL);CHK_ERROR(err);
 
-    if (err != CL_SUCCESS) {
-        printf("Error: Failed to write to source array!\n");
-        exit(1);
-    }
 
     //Cpu part
     double start = cpuSecond();
@@ -153,43 +141,36 @@ int main(int argc, char **argv) {
     }
 
     //Create the kernel function
-    cl_kernel kernel = clCreateKernel(program, "kernel_upload", &err);
+    cl_kernel kernel = clCreateKernel(program, "kernel_upload", &err);CHK_ERROR(err);
     
-    if (!kernel || err != CL_SUCCESS) {
-        printf("Error: Failed to create compute kernel!\n");
-        exit(1);
-    }
+
 
     //More argument, number of workitems we are going to use
-    size_t n_workitem = NUM_PARTICLES;
-    size_t workgroup_size = BLOCK_SIZE;
+    int mult = BLOCK_SIZE;
+    while(mult < NUM_PARTICLES){
+
+        mult = mult * 2;
+    }
+    size_t n_workitem[1] = {mult};
+    size_t workgroup_size[1] = {BLOCK_SIZE};
 
     double st = cpuSecond();
     for(i = 0; i < NUM_PARTICLES; i++){
 
         //Arguments for the Kernel function
-        err = clSetKernelArg(kernel, 0, sizeof(int), (void*) &i);
-        err = clSetKernelArg(kernel, 1, sizeof(int), (void*) &count);
-        err = clSetKernelArg(kernel, 2, sizeof(cl_mem), (void*) &dx);
-    
-        if (err != CL_SUCCESS) {
-            printf("Error: Failed to set kernel arguments! %d\n", err);
-            exit(1);
-        }
+        err = clSetKernelArg(kernel, 0, sizeof(int), (void*) &i);CHK_ERROR(err);
+        err = clSetKernelArg(kernel, 1, sizeof(int), (void*) &count);CHK_ERROR(err);
+        err = clSetKernelArg(kernel, 2, sizeof(cl_mem), (void*) &dx);CHK_ERROR(err);
 
         //Launch kernel
-        err = clEnqueueNDRangeKernel(cmd_queue, kernel, 1, NULL, &n_workitem, &workgroup_size, 0, NULL, NULL);
+        err = clEnqueueNDRangeKernel(cmd_queue, kernel, 1, NULL, &n_workitem, &workgroup_size, 0, NULL, NULL);CHK_ERROR(err);
 
-        if (err != CL_SUCCESS) {
-            printf("Error: Failed to execute kernel!\n");
-            return EXIT_FAILURE;
-        }
 
         //Wait for everything to finish
         err = clFlush(cmd_queue);
         err = clFinish(cmd_queue);
     }
-    err = clEnqueueReadBuffer(cmd_queue, dx, CL_TRUE, 0, array, results, 0, NULL, NULL);
+    err = clEnqueueReadBuffer(cmd_queue, dx, CL_TRUE, 0, array, results, 0, NULL, NULL);CHK_ERROR(err);
     double timeGpu = cpuSecond() - st;
     printf("Computing SACY on the GPU... Done\n");
 
@@ -212,10 +193,10 @@ int main(int argc, char **argv) {
 
 
     // Finally, release all that we have allocated.
-    clReleaseMemObject(dx);
-    clReleaseMemObject(dy);
-    clReleaseProgram(program);
-    clReleaseKernel(kernel);
+    clReleaseMemObject(dx);CHK_ERROR(err);
+    clReleaseMemObject(dy);CHK_ERROR(err);
+    clReleaseProgram(program);CHK_ERROR(err);
+    clReleaseKernel(kernel);CHK_ERROR(err);
     err = clReleaseCommandQueue(cmd_queue);CHK_ERROR(err);
     err = clReleaseContext(context);CHK_ERROR(err);
     free(platforms);
