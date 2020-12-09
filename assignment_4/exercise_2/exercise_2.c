@@ -135,7 +135,7 @@ int main(int argc, char **argv) {
         mult = mult * 2;
     }
     size_t n_workitem[1] = {mult};
-    size_t workgroup_size[1] = {1};
+    size_t workgroup_size[1] = {256};
 
 
     double st = cpuSecond();
