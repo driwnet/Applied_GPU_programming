@@ -18,14 +18,15 @@ const char* clGetErrorString(int);
 
 const char *mykernel = 
 "__kernel                                                 \n" 
-"void kernel_saxpy(                                       \n"
+"void kernel_saxpy (                                      \n"
 "   const int n,                                          \n"
 "   const float a,                                        \n"    
 "   __global float* X,                                    \n"   
 "   __global float* Y)                                    \n"
-"{int index = get_global_id(0);                           \n"
-"if(index < n)                                                \n"
-" Y[index] = a * X[index] + Y[index];                             \n"
+"{                                                        \n"
+"   int index = get_global_id(0);                         \n"
+"   if(index < n)                                         \n"
+"   Y[index] = a * X[index] + Y[index];                   \n"
 "}                                                        \n";
 
 
@@ -79,11 +80,7 @@ int main(int argc, char **argv) {
     /* Insert your own code here */
 
     //program
-    cl_program program = clCreateProgramWithSource(context, 1, (const char **)&mykernel, NULL, &err);
-    if (!program) {
-        printf("Error: Failed to create compute program!\n");
-        return EXIT_FAILURE;
-    }
+    cl_program program = clCreateProgramWithSource(context, 1, (const char **)&mykernel, NULL, &err);CHK_ERROR(err);
 
     //Initialize values of the arrays
  
@@ -102,22 +99,14 @@ int main(int argc, char **argv) {
     printf("Computing SAXPY on the CPU... Done\n");
 
     //Array on GPU part
-    cl_mem dx = clCreateBuffer(context, CL_MEM_READ_ONLY, array, NULL, &err);
-    cl_mem dy = clCreateBuffer(context, CL_MEM_READ_WRITE, array, NULL, &err);
+    cl_mem dx = clCreateBuffer(context, CL_MEM_READ_ONLY, array, NULL, &err);CHK_ERROR(err);
+    cl_mem dy = clCreateBuffer(context, CL_MEM_READ_WRITE, array, NULL, &err);CHK_ERROR(err);
 
-    if (!dx || !dy) {
-        printf("Error: Failed to allocate device memory!\n");
-        exit(1);
-    }
 
     //Copy the values of X in dx
-    err = clEnqueueWriteBuffer(cmd_queue, dx, CL_TRUE, 0, array, X, 0, NULL, NULL);
-    err = clEnqueueWriteBuffer(cmd_queue, dy, CL_TRUE, 0, array, Y, 0, NULL, NULL);
+    err = clEnqueueWriteBuffer(cmd_queue, dx, CL_TRUE, 0, array, X, 0, NULL, NULL);CHK_ERROR(err);
+    err = clEnqueueWriteBuffer(cmd_queue, dy, CL_TRUE, 0, array, Y, 0, NULL, NULL);CHK_ERROR(err);
 
-    if (err != CL_SUCCESS) {
-        printf("Error: Failed to write to source array!\n");
-        exit(1);
-    }
 
     //build the program 
     err = clBuildProgram(program, 1, device_list, NULL, NULL, NULL);
@@ -130,39 +119,25 @@ int main(int argc, char **argv) {
     }
 
     //Create the kernel function
-    cl_kernel kernel = clCreateKernel(program, "kernel_saxpy", &err);
+    cl_kernel kernel = clCreateKernel(program, "kernel_saxpy", &err);CHK_ERROR(err);
     
-    if (!kernel || err != CL_SUCCESS) {
-        printf("Error: Failed to create compute kernel!\n");
-        exit(1);
-    }
 
     //Arguments for the Kernel function
-    err = clSetKernelArg(kernel, 0, sizeof(int), (void*)&count);
-    err = clSetKernelArg(kernel, 1, sizeof(float), (void*)&a);
-    err = clSetKernelArg(kernel, 2, sizeof(cl_mem), (void*)&dx);
-    err = clSetKernelArg(kernel, 3, sizeof(cl_mem), (void*)&dy);
-
-    if (err != CL_SUCCESS) {
-        printf("Error: Failed to set kernel arguments! %d\n", err);
-        exit(1);
-    }
+    err = clSetKernelArg(kernel, 0, sizeof(int), (void*) &count);CHK_ERROR(err);
+    err = clSetKernelArg(kernel, 1, sizeof(float), (void*) &a);CHK_ERROR(err);
+    err = clSetKernelArg(kernel, 2, sizeof(cl_mem), (void*) &dx);CHK_ERROR(err);
+    err = clSetKernelArg(kernel, 3, sizeof(cl_mem), (void*) &dy);CHK_ERROR(err);
 
     //More argument, number of workitems we are going to use
-    size_t n_workitem = ARRAY_SIZE;
-    size_t workgroup_size = 256;
+    size_t n_workitem[1] = {ARRAY_SIZE};
+    size_t workgroup_size[1] = {1};
 
 
     double st = cpuSecond();
     //Launch kernel
-    err = clEnqueueNDRangeKernel(cmd_queue, kernel, 1, NULL, &n_workitem, &workgroup_size, 0, NULL, NULL);
+    err = clEnqueueNDRangeKernel(cmd_queue, kernel, 1, NULL, &n_workitem, &workgroup_size, 0, NULL, NULL);CHK_ERROR(err);
 
-    if (err) {
-        printf("Error: Failed to execute kernel!\n");
-        return EXIT_FAILURE;
-    }
-
-    err = clEnqueueReadBuffer(cmd_queue, dy, CL_TRUE, 0, array, Y, 0, NULL, NULL);
+    err = clEnqueueReadBuffer(cmd_queue, dy, CL_TRUE, 0, array, Y, 0, NULL, NULL);CHK_ERROR(err);
     double timeGpu = cpuSecond() - st;
     printf("Computing SACY on the GPU... Done\n");
 
@@ -191,10 +166,10 @@ int main(int argc, char **argv) {
 
 
     // Finally, release all that we have allocated.
-    clReleaseMemObject(dx);
-    clReleaseMemObject(dy);
-    clReleaseProgram(program);
-    clReleaseKernel(kernel);
+    clReleaseMemObject(dx);CHK_ERROR(err);
+    clReleaseMemObject(dy);CHK_ERROR(err);
+    clReleaseProgram(program);CHK_ERROR(err);
+    clReleaseKernel(kernel);CHK_ERROR(err);
     err = clReleaseCommandQueue(cmd_queue);CHK_ERROR(err);
     err = clReleaseContext(context);CHK_ERROR(err);
     free(platforms);
@@ -300,6 +275,7 @@ const char* clGetErrorString(int errorCode) {
     default: return "CL_UNKNOWN_ERROR";
     }
 }
+
 
 
 
