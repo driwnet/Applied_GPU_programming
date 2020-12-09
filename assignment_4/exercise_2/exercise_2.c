@@ -129,7 +129,12 @@ int main(int argc, char **argv) {
     err = clSetKernelArg(kernel, 3, sizeof(cl_mem), (void*) &dy);CHK_ERROR(err);
 
     //More argument, number of workitems we are going to use
-    size_t n_workitem[1] = {ARRAY_SIZE};
+    int mult = 256;
+    while(mult < ARRAY_SIZE){
+
+        mult = mult * 2;
+    }
+    size_t n_workitem[1] = {mult};
     size_t workgroup_size[1] = {1};
 
 
