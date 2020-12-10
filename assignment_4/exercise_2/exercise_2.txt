@@ -1,0 +1,48 @@
+Assignment 4:
+
+Exercise 2:
+Computing SAXPY on the CPU... Done
+Computing SACY on the GPU... Done
+Comparing the output for each implementation... Correct!
+ARRAY_SIZE: 10000
+Execution time on CPU: 0.000068
+Execution time on GPU: 0.000112
+
+Computing SAXPY on the CPU... Done
+Computing SACY on the GPU... Done
+Comparing the output for each implementation... Correct!
+ARRAY_SIZE: 100000
+Execution time on CPU: 0.000707
+Execution time on GPU: 0.000336
+
+Computing SAXPY on the CPU... Done
+Computing SACY on the GPU... Done
+Comparing the output for each implementation... Correct!
+ARRAY_SIZE: 1000000
+Execution time on CPU: 0.004336
+Execution time on GPU: 0.001956
+
+Computing SAXPY on the CPU... Done
+Computing SACY on the GPU... Done
+Comparing the output for each implementation... Correct!
+ARRAY_SIZE: 10000000
+Execution time on CPU: 0.041405
+Execution time on GPU: 0.018525
+
+Computing SAXPY on the CPU... Done
+Computing SACY on the GPU... Done
+Comparing the output for each implementation... Correct!
+ARRAY_SIZE: 100000000
+Execution time on CPU: 0.312513
+Execution time on GPU: 0.179719
+
+Error: CL_MEM_OBJECT_ALLOCATION_FAILURE
+Error: CL_MEM_OBJECT_ALLOCATION_FAILURE
+Error: CL_MEM_OBJECT_ALLOCATION_FAILURE
+Error: CL_MEM_OBJECT_ALLOCATION_FAILURE
+Computing SAXPY on the CPU... Done
+Computing SACY on the GPU... Done
+Comparing the output for each implementation... Incorrect!
+ARRAY_SIZE: 1000000000
+Execution time on CPU: 3.245952
+Execution time on GPU: 0.007664
