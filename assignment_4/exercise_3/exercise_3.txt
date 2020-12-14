@@ -1,0 +1,67 @@
+Exercise_3:
+1 - 2 a:
+
+NUM_PARTICLES: 1000
+BLOCK_SIZE: 64
+NUM_ITERATIONS: 1000
+Execution time on CPU: 0.033162
+Execution time on GPU: 0.023355
+
+NUM_PARTICLES: 10000
+BLOCK_SIZE: 64
+NUM_ITERATIONS: 1000
+Execution time on CPU: 0.216290
+Execution time on GPU: 0.068322
+
+NUM_PARTICLES: 100000
+BLOCK_SIZE: 64
+NUM_ITERATIONS: 1000
+Execution time on CPU: 1.615314
+Execution time on GPU: 0.541274
+
+NUM_PARTICLES: 1000000
+BLOCK_SIZE: 64
+NUM_ITERATIONS: 1000
+Execution time on CPU: 14.681637
+Execution time on GPU: 5.208599
+
+NUM_PARTICLES: 10000000
+BLOCK_SIZE: 64
+NUM_ITERATIONS: 1000
+Execution time on CPU: 145.448990
+Execution time on GPU: 53.541827
+------------------------------------------------------------------------------------
+2 B:
+
+-------------------------1000-------------------------------------------------------
+NUM_PARTICLES: 1000
+BLOCK_SIZE: 16
+NUM_ITERATIONS: 1000
+Execution time on CPU: 0.026475
+Execution time on GPU: 0.022284
+
+NUM_PARTICLES: 1000
+BLOCK_SIZE: 32
+NUM_ITERATIONS: 1000
+Execution time on CPU: 0.027272
+Execution time on GPU: 0.022292
+
+NUM_PARTICLES: 1000
+BLOCK_SIZE: 64
+NUM_ITERATIONS: 1000
+Execution time on CPU: 0.033162
+Execution time on GPU: 0.023355
+
+NUM_PARTICLES: 1000
+BLOCK_SIZE: 128
+NUM_ITERATIONS: 1000
+Execution time on CPU: 0.029040
+Execution time on GPU: 0.023100
+
+NUM_PARTICLES: 1000
+BLOCK_SIZE: 256
+NUM_ITERATIONS: 1000
+Execution time on CPU: 0.026723
+Execution time on GPU: 0.022389
+
+-----------------------------10000--------------------------------------------------
