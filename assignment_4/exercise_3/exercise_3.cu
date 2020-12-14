@@ -21,6 +21,10 @@ const char* clGetErrorString(int);
 
 
 const char *mykernel = 
+"typedef struct{                                         \n"
+    "float position[3];                                    \n"
+    "float velocity[3];                                   \n"
+"}particle;                                                       \n"
 "__kernel                                                 \n" 
 "void kernel_upload(                                       \n"
 "   const int iter,                                          \n"
@@ -37,10 +41,10 @@ const char *mykernel =
 "}                                                          \n"
 "}                                                        \n";
 
-struct __atribute__ ((packed)) particle{
+typedef struct{
     float position[3];
     float velocity[3];
-};
+}particle;
 
 double cpuSecond() {
     struct timeval tp;
@@ -159,15 +163,17 @@ int main(int argc, char **argv) {
     size_t n_workitem[1] = {mult};
     size_t workgroup_size[1] = {size};
 
+    err = clSetKernelArg(kernel, 1, sizeof(int), (void*) &count);CHK_ERROR(err);
+    err = clSetKernelArg(kernel, 2, sizeof(cl_mem), (void*) &dx);CHK_ERROR(err);
 
-
+    
     double st = cpuSecond();
-    for(i = 0; i < NUM_PARTICLES; i++){
+    for(i = 0; i < NUM_ITERATIONS; i++){
 
         //Arguments for the Kernel function
         err = clSetKernelArg(kernel, 0, sizeof(int), (void*) &i);CHK_ERROR(err);
-        err = clSetKernelArg(kernel, 1, sizeof(int), (void*) &count);CHK_ERROR(err);
-        err = clSetKernelArg(kernel, 2, sizeof(cl_mem), (void*) &dx);CHK_ERROR(err);
+
+
 
         //Launch kernel
         err = clEnqueueNDRangeKernel(cmd_queue, kernel, 1, NULL, n_workitem, workgroup_size, 0, NULL, NULL);CHK_ERROR(err);
@@ -185,9 +191,11 @@ int main(int argc, char **argv) {
         for(int dim = 0; dim < 3; dim++){
             if(abs(results[i].position[dim] - X[i].position[dim]) > error ){
                 correct = false;
+                printf("Error en %d i en dim %d, resultado %f i %f\n",i,dim,results[i].position[1],X[i].position[1]);
                 break;
             }
         }
+        if(!correct) {break;}
     }
 
     if (correct) {
